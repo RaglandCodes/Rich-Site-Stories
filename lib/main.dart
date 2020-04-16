@@ -1,10 +1,14 @@
 import 'dart:convert';
-//import 'dart:js';
-//import 'dart:js';
+import 'package:rich_site_stories/FeedTile.dart';
+
 import 'package:rich_site_stories/secrets.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:rich_site_stories/models/Feed.dart';
+import 'package:rich_site_stories/models/UserDetails.dart';
+import 'package:rich_site_stories/uiConstants.dart';
+import 'package:rich_site_stories/Screens/Story/Story.dart';
 
 void main() {
   runApp(ChangeNotifierProvider(
@@ -19,46 +23,13 @@ void main() {
   ));
 }
 
-class FeedItem {
-  final String id;
-  final String title;
-  final String image;
-  final String link;
-  final bool read;
-
-  FeedItem({this.id, this.image, this.title, this.read, this.link});
-
-  factory FeedItem.fromJson(Map<String, dynamic> json) {
-    return FeedItem(
-        id: json['id'],
-        title: json['title'],
-        link: json['link'],
-        image: json['image']);
-  }
-}
-
-class Feed {
-  final String feedName;
-  final String about;
-  final String siteLink;
-  Feed({this.feedName, this.about, this.siteLink});
-
-  factory Feed.fromJson(Map<String, dynamic> json) {
-    return Feed(
-      feedName: json['feed'],
-      about: json['about'],
-      siteLink: json['siteLink'],
-    );
-  }
-}
-
 List<Feed> parseFetchFeedResponse(String responseBody) {
   final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
   return parsed.map<Feed>((json) => Feed.fromJson(json)).toList();
 }
 
 Future<List<Feed>> fetchFeeds(http.Client client) async {
-  final response = await client.get("http://$ip:5151/allFeeds");
+  final response = await client.get("http://$ip:5151/feedforstories");
   if (response.statusCode == 200) {
     //print(response.body);
   }
@@ -66,14 +37,14 @@ Future<List<Feed>> fetchFeeds(http.Client client) async {
   return parseFetchFeedResponse(response.body);
 }
 
-class UserDetails with ChangeNotifier {
-  final List<String> subscriptions = [];
+// class UserDetails with ChangeNotifier {
+//   final List<String> subscriptions = [];
 
-  void addSubscription(String newSubscription) {
-    subscriptions.add(newSubscription);
-    notifyListeners();
-  }
-}
+//   void addSubscription(String newSubscription) {
+//     subscriptions.add(newSubscription);
+//     notifyListeners();
+//   }
+// }
 
 class RichSiteStories extends StatelessWidget {
   @override
@@ -86,13 +57,16 @@ class RichSiteStories extends StatelessWidget {
             Consumer<UserDetails>(
               builder: (context, userDetails, child) {
                 return SizedBox(
-                  height: 60,
+                  height: feedTileHeight,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    //shrinkWrap: true,
+                    shrinkWrap: true,
                     itemCount: userDetails.subscriptions.length,
                     itemBuilder: (BuildContext context, int i) {
-                      return Text(userDetails.subscriptions[i]);
+                      return FeedTile(
+                        feed: userDetails.subscriptions[i],
+                      );
+                      //Text(userDetails.subscriptions[i]);
                     },
                   ),
                 );
@@ -128,37 +102,15 @@ class FeedsList extends StatelessWidget {
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
+        childAspectRatio: feedTileWidth / feedTileHeight,
+        crossAxisSpacing: padding,
+        mainAxisSpacing: padding,
       ),
       itemCount: feeds.length,
+      padding: EdgeInsets.all(2),
       itemBuilder: (BuildContext context, int i) {
-        return GestureDetector(
-          child: Column(
-            children: <Widget>[
-              Text(feeds[i].feedName),
-              Text(feeds[i].about ?? ""),
-            ],
-          ),
-          onTap: () {
-            print("sjsijsi");
-            userDetails.addSubscription(feeds[i].feedName);
-          },
-        );
+        return FeedTile(feed: feeds[i]);
       },
     );
   }
 }
-
-class Story extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Text("story page"),
-      ),
-    );
-  }
-}
-
-// Future<http.Response> fetchItems() {
-//   return http.get('https://jsonplaceholder.typicode.com/albums/1');
-// }
