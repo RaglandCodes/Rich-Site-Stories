@@ -14,14 +14,11 @@ class UserDetails with ChangeNotifier {
   int currentFeedLength = 0;
 
   void addSubscription(Feed newSubscription) {
-    print(newSubscription.feedItems);
-
     subscriptions.add(newSubscription);
     notifyListeners();
   }
 
   Future<List<FeedItem>> fetchFeedItems(http.Client client, feedName) async {
-    //Future<void> fetchFeedItems(http.Client client, feedName) async {
     //TODO handle this error
     final response =
         await client.get("http://$ip:5151/getItems?subscriptions=$feedName");
@@ -29,20 +26,14 @@ class UserDetails with ChangeNotifier {
     if (response.statusCode == 200) {
       final parsed =
           json.decode(response.body)['data'].cast<Map<String, dynamic>>();
-      //final parsedData = parsed.cast<Map<String, dynamic>>();
 
-      // print(parsed);
-      // print("parsedData");
-
-      // final pd =
-      //     parsed.map<FeedItem>((json) => FeedItem.fromJson(json)).toList();
-
-      //print(pd);
-      return parsed.map<FeedItem>((json) => FeedItem.fromJson(json)).toList();
-
-      //TODO set currentFeed length
+      final parsedList =
+          parsed.map<FeedItem>((json) => FeedItem.fromJson(json)).toList();
+      currentFeedLength = parsedList.length;
+      return parsedList;
+    } else {
+      throw Exception('Failed to fetch for $feedName');
     }
-    //throw Exception('Failed to fetch for $feedName');
   }
 
   void setCurrentFeed(Feed feed) {
@@ -53,13 +44,26 @@ class UserDetails with ChangeNotifier {
   }
 
   void goToNextItem() {
-    // TODO handle case where <=feedlength
-    currentFeedIndex += 1;
+    if (currentFeedIndex + 1 < currentFeedLength) {
+      currentFeedIndex += 1;
+    } else {
+      // TODO open the next feed
+    }
+
     notifyListeners();
+  }
+
+  bool currentFeedIsSubscribed() {
+    return subscriptions.contains(currentFeed);
   }
 
   void toggleSubscription(Feed subscription) {
     //TODO remove if already there
+    if (subscriptions.contains(subscription)) {
+      subscriptions.remove(subscription);
+    } else {
+      subscriptions.add(subscription);
+    }
     notifyListeners();
   }
 }

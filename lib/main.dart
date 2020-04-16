@@ -8,12 +8,13 @@ import 'package:provider/provider.dart';
 import 'package:rich_site_stories/models/Feed.dart';
 import 'package:rich_site_stories/models/UserDetails.dart';
 import 'package:rich_site_stories/uiConstants.dart';
-import 'package:rich_site_stories/Screens/Story/Story.dart';
+import 'package:rich_site_stories/screens/Story/Story.dart';
 
 void main() {
   runApp(ChangeNotifierProvider(
     create: (context) => UserDetails(),
     child: MaterialApp(
+      debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: {
         '/': (context) => RichSiteStories(),
