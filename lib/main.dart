@@ -51,45 +51,44 @@ class RichSiteStories extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text("Rich Site Stories")),
         body: Column(
-          children: <Widget>[
-            Text("Subscriptions"),
-            Consumer<UserDetails>(
-              builder: (context, userDetails, child) {
-                return SizedBox(
-                  height: feedTileHeight,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    shrinkWrap: true,
-                    itemCount: userDetails.subscriptions.length,
-                    itemBuilder: (BuildContext context, int i) {
-                      return FeedTile(
-                        feed: userDetails.subscriptions[i],
-                      );
-                      //Text(userDetails.subscriptions[i]);
-                    },
-                  ),
-                );
-              },
-            ),
-            Text("Discover"),
-            Expanded(
-                child: FutureBuilder<List<Feed>>(
-              future: fetchFeeds(http.Client()),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return FeedsList(feeds: snapshot.data);
-                }
-                if (snapshot.hasError) {
-                  return Text("Got error");
-                }
+      children: <Widget>[
+        Text("Subscriptions"),
+        Consumer<UserDetails>(
+          builder: (context, userDetails, child) {
+            return SizedBox(
+              height: feedTileHeight,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                shrinkWrap: true,
+                itemCount: userDetails.subscriptions.length,
+                itemBuilder: (BuildContext context, int i) {
+                  return FeedTile(
+                    feed: userDetails.subscriptions[i],
+                  );
+                  //Text(userDetails.subscriptions[i]);
+                },
+              ),
+            );
+          },
+        ),
+        Text("Discover"),
+        Expanded(
+            child: FutureBuilder<List<Feed>>(
+          future: fetchFeeds(http.Client()),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return FeedsList(feeds: snapshot.data);
+            }
+            if (snapshot.hasError) {
+              return Text("Got error");
+            }
 
-                return Text("Loading");
-              },
-            ))
-          ],
-        ));
+            return Text("Loading");
+          },
+        ))
+      ],
+    ));
   }
 }
 
@@ -101,6 +100,7 @@ class FeedsList extends StatelessWidget {
   Widget build(BuildContext context) {
     var userDetails = Provider.of<UserDetails>(context);
     return GridView.builder(
+      //TODO show only items that are not subscribed
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         childAspectRatio: feedTileWidth / feedTileHeight,
