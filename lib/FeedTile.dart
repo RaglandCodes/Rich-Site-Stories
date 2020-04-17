@@ -24,7 +24,7 @@ class FeedTile extends StatelessWidget {
           height: feedTileHeight,
           child: GestureDetector(
             child: Padding(
-              padding: EdgeInsets.all(padding),
+              padding: EdgeInsets.fromLTRB(0, padding, padding, 0),
               child: Column(
                 children: <Widget>[
                   Expanded(

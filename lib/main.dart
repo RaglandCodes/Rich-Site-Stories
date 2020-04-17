@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:rich_site_stories/FeedTile.dart';
+import 'package:rich_site_stories/FeedGrid.dart';
 
 import 'package:rich_site_stories/secrets.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:rich_site_stories/models/Feed.dart';
 import 'package:rich_site_stories/models/UserDetails.dart';
-import 'package:rich_site_stories/uiConstants.dart';
+import 'package:rich_site_stories/styles/textStyles.dart';
 import 'package:rich_site_stories/screens/Story/Story.dart';
 
 void main() {
@@ -51,67 +51,33 @@ class RichSiteStories extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(
-      children: <Widget>[
-        Text("Subscriptions"),
-        Consumer<UserDetails>(
-          builder: (context, userDetails, child) {
-            return SizedBox(
-              height: feedTileHeight,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                shrinkWrap: true,
-                itemCount: userDetails.subscriptions.length,
-                itemBuilder: (BuildContext context, int i) {
-                  return FeedTile(
-                    feed: userDetails.subscriptions[i],
-                  );
-                  //Text(userDetails.subscriptions[i]);
-                },
-              ),
-            );
-          },
-        ),
-        Text("Discover"),
-        Expanded(
-            child: FutureBuilder<List<Feed>>(
-          future: fetchFeeds(http.Client()),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return FeedsList(feeds: snapshot.data);
-            }
-            if (snapshot.hasError) {
-              return Text("Got error");
-            }
+      body: ListView(
+        children: <Widget>[
+          Text(
+            "Subscriptions",
+            style: header2Style,
+          ),
+          Consumer<UserDetails>(builder: (context, userDetails, child) {
+            return FeedGrid(feeds: userDetails.subscriptions);
+          }),
+          Text(
+            "Discover",
+            style: header2Style,
+          ),
+          FutureBuilder<List<Feed>>(
+              future: fetchFeeds(http.Client()),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return FeedGrid(feeds: snapshot.data);
+                }
+                if (snapshot.hasError) {
+                  return Text("Got error");
+                }
 
-            return Text("Loading");
-          },
-        ))
-      ],
-    ));
-  }
-}
-
-class FeedsList extends StatelessWidget {
-  final List<Feed> feeds;
-
-  FeedsList({Key key, this.feeds}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    var userDetails = Provider.of<UserDetails>(context);
-    return GridView.builder(
-      //TODO show only items that are not subscribed
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: feedTileWidth / feedTileHeight,
-        crossAxisSpacing: padding,
-        mainAxisSpacing: padding,
+                return Text("Loading");
+              }),
+        ],
       ),
-      itemCount: feeds.length,
-      padding: EdgeInsets.all(2),
-      itemBuilder: (BuildContext context, int i) {
-        return FeedTile(feed: feeds[i]);
-      },
     );
   }
 }

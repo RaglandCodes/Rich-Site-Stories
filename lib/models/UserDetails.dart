@@ -1,3 +1,5 @@
+// This is something like global state
+
 import 'package:flutter/material.dart';
 import 'package:rich_site_stories/main.dart';
 import 'package:rich_site_stories/models/Feed.dart';
@@ -9,9 +11,24 @@ import 'package:rich_site_stories/secrets.dart';
 class UserDetails with ChangeNotifier {
   final List<Feed> subscriptions = [];
   Future<List<FeedItem>> currentFeedItems;
+  FeedItem currentStory;
   Feed currentFeed;
   int currentFeedIndex = 0;
   int currentFeedLength = 0;
+
+  List<Feed> parseFetchFeedResponse(String responseBody) {}
+
+  Future<List<Feed>> allFeeds(http.Client client) async {
+    final response = await http.Client().get("http://$ip:5151/feedforstories");
+
+    print("fetching all feeds from server");
+    if (response.statusCode == 200) {
+      final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
+      return parsed.map<Feed>((json) => Feed.fromJson(json)).toList();
+    }
+
+    //return parseFetchFeedResponse(response.body);
+  }
 
   void addSubscription(Feed newSubscription) {
     subscriptions.add(newSubscription);
@@ -41,6 +58,11 @@ class UserDetails with ChangeNotifier {
     currentFeedIndex = 0; // Starts from beginning
     currentFeedItems = fetchFeedItems(http.Client(), feed.feedName);
     //notifyListeners();
+  }
+
+  void setCurrentStory(FeedItem story) {
+    currentStory = story;
+    notifyListeners();
   }
 
   void goToNextItem() {

@@ -15,3 +15,6 @@ TextStyle feedTileStyle = TextStyle(
   color: Colors.grey[900],
   fontSize: 16,
 );
+
+TextStyle header2Style =
+    TextStyle(fontWeight: FontWeight.w700, fontSize: 27, fontFamily: 'Raleway');
