@@ -30,7 +30,8 @@ List<Feed> parseFetchFeedResponse(String responseBody) {
 }
 
 Future<List<Feed>> fetchFeeds(http.Client client) async {
-  final response = await client.get("http://$ip:5151/feedforstories");
+  final response =
+      await client.get("https://lw-line-backend.glitch.me/feedforstories");
   if (response.statusCode == 200) {
     //print(response.body);
   }

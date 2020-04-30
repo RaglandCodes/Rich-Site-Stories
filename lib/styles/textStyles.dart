@@ -3,10 +3,11 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:rich_site_stories/styles/colour.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-var storyMainTextStyle = TextStyle(
+var storyMainTextStyle = GoogleFonts.montserrat(
+  fontStyle: FontStyle.italic,
   fontWeight: FontWeight.w600,
-  fontSize: 36,
   background: Paint()..color = randomHighLightColour(),
 );
 
@@ -17,4 +18,4 @@ TextStyle feedTileStyle = TextStyle(
 );
 
 TextStyle header2Style =
-    TextStyle(fontWeight: FontWeight.w700, fontSize: 27, fontFamily: 'Raleway');
+    GoogleFonts.merriweather(fontWeight: FontWeight.w700, fontSize: 27);

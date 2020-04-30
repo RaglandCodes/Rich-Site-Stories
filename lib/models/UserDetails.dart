@@ -19,7 +19,8 @@ class UserDetails with ChangeNotifier {
   List<Feed> parseFetchFeedResponse(String responseBody) {}
 
   Future<List<Feed>> allFeeds(http.Client client) async {
-    final response = await http.Client().get("http://$ip:5151/feedforstories");
+    final response = await http.Client()
+        .get("https://lw-line-backend.glitch.me/feedforstories");
 
     print("fetching all feeds from server");
     if (response.statusCode == 200) {
@@ -37,8 +38,10 @@ class UserDetails with ChangeNotifier {
 
   Future<List<FeedItem>> fetchFeedItems(http.Client client, feedName) async {
     //TODO handle this error
-    final response =
-        await client.get("http://$ip:5151/getItems?subscriptions=$feedName");
+
+    print("fn" + feedName);
+    final response = await client.get(
+        "https://lw-line-backend.glitch.me/getItems?subscriptions=$feedName");
     //TODO create special endpoint to return only last 24 hours
     if (response.statusCode == 200) {
       final parsed =
