@@ -1,14 +1,21 @@
+//flutter
 import 'dart:convert';
-import 'package:rich_site_stories/FeedGrid.dart';
-
-import 'package:rich_site_stories/secrets.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+
+//models
 import 'package:rich_site_stories/models/Feed.dart';
 import 'package:rich_site_stories/models/UserDetails.dart';
-import 'package:rich_site_stories/styles/textStyles.dart';
+
+//widgets
+import 'package:rich_site_stories/FeedGrid.dart';
 import 'package:rich_site_stories/screens/Story/Story.dart';
+
+//styles
+import 'package:rich_site_stories/styles/textStyles.dart';
+
+import 'package:rich_site_stories/secrets.dart';
 
 void main() {
   runApp(ChangeNotifierProvider(

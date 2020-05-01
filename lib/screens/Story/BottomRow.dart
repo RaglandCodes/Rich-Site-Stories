@@ -18,38 +18,42 @@ class BottomRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        // IconButton(
-        //   icon: (userDetails.currentFeedIsSubscribed()
-        //       ? Icon(Icons.bookmark)
-        //       : Icon(Icons.bookmark_border)),
-        //   tooltip: 'Subscribe',
-        //   onPressed: () {
-        //     userDetails.toggleSubscription(userDetails.currentFeed);
-        //   },
-        // ),
-        IconButton(
-          icon: Icon(Icons.share),
-          onPressed: () {
-            Share.share(""" ${currentStory.title}
-              
-              ${currentStory.link}
-              """);
-          },
-        ),
-        IconButton(
-            icon: Icon(Icons.open_in_new),
-            tooltip: ' More info',
+    return Container(
+      padding: EdgeInsets.all(0),
+      decoration: BoxDecoration(color: Colors.blueAccent),
+      child: Row(
+        children: <Widget>[
+          // IconButton(
+          //   icon: (userDetails.currentFeedIsSubscribed()
+          //       ? Icon(Icons.bookmark)
+          //       : Icon(Icons.bookmark_border)),
+          //   tooltip: 'Subscribe',
+          //   onPressed: () {
+          //     userDetails.toggleSubscription(userDetails.currentFeed);
+          //   },
+          // ),
+          IconButton(
+            icon: Icon(Icons.share),
             onPressed: () {
-              launch(currentStory.link);
-            }),
-        IconButton(
-          icon: Icon(Icons.menu),
-          tooltip: ' More info',
-          onPressed: () {},
-        )
-      ],
+              Share.share(""" ${currentStory.title}
+                
+                ${currentStory.link}
+                """);
+            },
+          ),
+          IconButton(
+              icon: Icon(Icons.open_in_new),
+              tooltip: ' More info',
+              onPressed: () {
+                launch(currentStory.link);
+              }),
+          IconButton(
+            icon: Icon(Icons.menu),
+            tooltip: ' More info',
+            onPressed: () {},
+          )
+        ],
+      ),
     );
   }
 }

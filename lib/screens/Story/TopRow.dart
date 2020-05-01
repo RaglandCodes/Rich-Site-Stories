@@ -1,6 +1,13 @@
-import 'package:rich_site_stories/models/UserDetails.dart';
-import 'package:rich_site_stories/styles/colour.dart';
+//flutter
 import 'package:flutter/material.dart';
+
+//widgets
+
+//models
+import 'package:rich_site_stories/models/UserDetails.dart';
+
+//styles
+import 'package:rich_site_stories/styles/colour.dart';
 
 class TopRow extends StatelessWidget {
   final int len;
@@ -16,7 +23,7 @@ class TopRow extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
         SizedBox(
-          height: 60,
+          height: 30,
           child: ListView.builder(
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,

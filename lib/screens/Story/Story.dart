@@ -1,12 +1,20 @@
+//flutter
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+
+//models
 import 'package:rich_site_stories/models/FeedItem.dart';
 import 'package:rich_site_stories/models/UserDetails.dart';
+
+//widgets
 import 'package:rich_site_stories/screens/Story/TopRow.dart';
+import 'package:rich_site_stories/screens/Story/BottomRow.dart';
+import 'package:rich_site_stories/screens/Story/StoryImage.dart';
+
+//styles
 import 'package:rich_site_stories/styles/colour.dart';
 import 'package:rich_site_stories/styles/textStyles.dart';
-import 'package:share/share.dart';
-import 'package:rich_site_stories/screens/Story/BottomRow.dart';
+import 'package:rich_site_stories/uiConstants.dart';
 
 class Story extends StatelessWidget {
   @override
@@ -21,28 +29,54 @@ class Story extends StatelessWidget {
                   onTap: () {
                     userDetails.goToNextItem();
                   },
-                  child: Column(
-                    children: <Widget>[
-                      TopRow(
+                  child: Container(
+                    child: Column(
+                      children: <Widget>[
+                        TopRow(
                           len: userDetails.currentFeedLength,
                           i: userDetails.currentFeedIndex,
                           feedName: userDetails.currentFeed.feedName,
-                          userDetails: userDetails),
-                      Container(
-                        child: Expanded(
-                          child: Text(
-                            snapshot.data[userDetails.currentFeedIndex].title ??
-                                "OO",
-                            style: storyMainTextStyle,
+                          userDetails: userDetails,
+                        ),
+                        Expanded(
+                          child: Column(
+                            children: <Widget>[
+                              Flexible(
+                                flex: 5,
+                                child: Container(
+                                  padding: const EdgeInsets.all(storyPadding),
+                                  child: Text(
+                                    snapshot.data[userDetails.currentFeedIndex]
+                                        .title,
+                                    style: storyMainTextStyle,
+                                  ),
+                                ),
+                              ),
+                              StoryImage(
+                                  currentImage: snapshot
+                                      .data[userDetails.currentFeedIndex]
+                                      .image),
+                              Flexible(
+                                flex: 2,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(storyPadding),
+                                  child: Text(
+                                    snapshot.data[userDetails.currentFeedIndex]
+                                        .description,
+                                    style: storyDescriptionStyle,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ),
-                      BottomRow(
-                        userDetails: userDetails,
-                        currentStory:
-                            snapshot.data[userDetails.currentFeedIndex],
-                      ),
-                    ],
+                        BottomRow(
+                          userDetails: userDetails,
+                          currentStory:
+                              snapshot.data[userDetails.currentFeedIndex],
+                        ),
+                      ],
+                    ),
                   ),
                 );
               } else {
